@@ -1,0 +1,1 @@
+{"name":"stickman-smash-royale","private":true,"type":"module","scripts":{"test":"node test.mjs && node test-app.mjs"}}
