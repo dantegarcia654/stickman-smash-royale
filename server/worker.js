@@ -1,0 +1,2 @@
+import {roomRoute} from './rooms.js';
+export default {async fetch(request,env){const url=new URL(request.url);if(url.pathname.startsWith('/api/'))return roomRoute(request,env);const path=url.pathname==='/'?'/index.html':url.pathname;const asset=STATIC_ASSETS[path];if(!asset)return new Response('Not found',{status:404});return new Response(request.method==='HEAD'?null:asset.content,{headers:{'content-type':asset.type,'cache-control':'no-cache','x-content-type-options':'nosniff'}});}};

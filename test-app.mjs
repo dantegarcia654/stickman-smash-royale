@@ -1,3 +1,4 @@
+import {unpackGame,packGame} from './dist/snapshot.js';
 import {MAPS,getMap} from './dist/maps.js';
 import {drawBackdrop,drawTerrain,drawWater} from './dist/maps-render.js';
 import assert from 'node:assert/strict';
@@ -10,12 +11,12 @@ import {RewardInventory,FLOWER_KEY,flowerIcon,starIcon,ITEM_NAMES} from './dist/
 const nodes=new Map(),classes=()=>({add(){},remove(){},toggle(){}});
 const gradient={addColorStop(){}};
 const ctx=new Proxy({},{get:(o,key)=>o[key]??(String(key).startsWith('create')?()=>gradient:()=>{}),set:(o,key,value)=>(o[key]=value,true)});
-const node=id=>{if(!nodes.has(id))nodes.set(id,{id,style:{},classList:classes(),textContent:'',innerHTML:'',hidden:true,dataset:{},setAttribute(){},addEventListener(){},getContext:()=>ctx});return nodes.get(id);};
+const node=id=>{if(!nodes.has(id))nodes.set(id,{id,style:{},classList:classes(),textContent:'',innerHTML:'',hidden:true,dataset:{},setAttribute(){},replaceChildren(){},addEventListener(){},getContext:()=>ctx});return nodes.get(id);};
 const cards=FIGHTERS.map((_,i)=>({...node('card'+i),dataset:{choice:String(i)}}));
 const actions=['left','right','jump','climb','swim','flower','special','activate','command','fire'].map(action=>({...node('action-'+action),dataset:{action}}));
 const storageMap=new Map(),storage={getItem:k=>storageMap.get(k)||null,setItem:(k,v)=>storageMap.set(k,v)};
-const document={getElementById:node,body:{classList:classes()},addEventListener(){},querySelector:s=>s==='.result'?node('result'):s.startsWith('[data-action=')?actions.find(n=>n.dataset.action===s.slice(13,-1)):node(s),querySelectorAll:s=>s==='.fighter-card'?cards:s==='[data-action]'?actions:[]};
-const sandbox={MAPS,getMap,drawBackdrop,drawTerrain,drawWater,Game,FIGHTERS,PLATFORMS,ARMORS,victoryTrophy,RewardInventory,FLOWER_KEY,flowerIcon,starIcon,ITEM_NAMES,document,window:{localStorage:storage,addEventListener(){}},matchMedia:()=>({matches:false}),devicePixelRatio:1,innerWidth:1200,innerHeight:740,requestAnimationFrame(){},crypto:{randomUUID},console,assert};
+const document={createElement:tag=>({...node("created-"+Math.random()),tagName:tag}),getElementById:node,body:{classList:classes()},addEventListener(){},querySelector:s=>s==='.result'?node('result'):s.startsWith('[data-action=')?actions.find(n=>n.dataset.action===s.slice(13,-1)):node(s),querySelectorAll:s=>s==='.fighter-card'?cards:s==='[data-action]'?actions:[]};
+const sandbox={unpackGame,packGame,NetworkRoom:class {},mountMontage:()=>({close(){}}),performance,MAPS,getMap,drawBackdrop,drawTerrain,drawWater,Game,FIGHTERS,PLATFORMS,ARMORS,victoryTrophy,RewardInventory,FLOWER_KEY,flowerIcon,starIcon,ITEM_NAMES,document,window:{localStorage:storage,addEventListener(){}},matchMedia:()=>({matches:false}),devicePixelRatio:1,innerWidth:1200,innerHeight:740,requestAnimationFrame(){},crypto:{randomUUID},console,assert};
 const source=fs.readFileSync('dist/game.js','utf8').replace(/^import .*;\n/gm,'');
 const run=vm.createContext(sandbox);vm.runInContext(source,run);
 vm.runInContext(`
@@ -27,4 +28,12 @@ start();for(const f of game.fighters.slice(1)){f.lives=1;game.eliminate(f);}fram
 for(const f of game.fighters.slice(1)){f.lives=1;game.eliminate(f);}frame(1000);assert.equal(lastAwardType,'star');assert.equal(flowerInventory.countOf('star'),1);$('flower-next').onclick();start();assert.equal(game.player.starTime,0);pressed={KeyR:true};frame(1100);assert(game.player.starTime>9.9);assert.equal(flowerInventory.countOf('star'),0);assert(game.player.starUsed);const hp=game.player.hp;game.hit(game.player,1000,0,0,1);assert.equal(game.player.hp,hp);keys={KeyF:true};frame(1500);assert(game.player.charge>0);keys={};
 `,run);
 vm.runInContext(`for(const m of MAPS){selectMap(m.id);start();assert.equal(game.map.id,m.id);frame(last+16);assert.equal($('map-current').textContent,m.name.toUpperCase());assert.equal(document.querySelector('[data-action=swim]').hidden,m.water===undefined);}selectMap('ocean');start();game.player.x=560;game.player.y=775;keys={KeyL:true};for(let i=0;i<15;i++)frame(last+16);assert(game.player.y<775);assert.equal(game.player.lives,5);`,run);
+vm.runInContext(`
+const remote=new Game(0,()=>.99,'city');remote.fighters[1].type=remote.fighters[1].baseType=9;
+const roomState={code:'ABC234',phase:'waiting',mapId:'city',you:1,host:false,matchId:'network-app-check',players:[{id:0,type:0,name:'Host',connected:true},{id:1,type:9,name:'Guest',connected:true}],game:null,stock:{flower:0,star:0},spent:{flower:0,star:0}};
+let sent=null;net={lastOk:performance.now(),input:{},capture(v){sent=v;},leave(){}};receiveRoom(roomState);assert(!$('room-panel').hidden);assert($('room-start').hidden);assert.equal($('room-code-display').textContent,'ABC234');
+roomState.phase='playing';roomState.game=packGame(remote);receiveRoom(roomState);assert.equal(game.player.id,1);assert.equal(game.player.type,9);assert($('room-panel').hidden);keys={KeyX:true};pressed={};const bulletCount=game.bullets.length;frame(last+16);assert(sent.fire);assert.equal(game.bullets.length,bulletCount);assert.equal($('hud-name').textContent,'KAIDOG');
+remote.over=true;remote.winnerId=1;remote.lastDefeated=0;for(const f of remote.fighters)if(f.id!==1){f.alive=false;f.lives=0;}roomState.phase='finished';roomState.game=packGame(remote);receiveRoom(roomState);assert(game.won);assert(!$('flower-award').hidden);assert.equal($('again').textContent,'RETURN TO LOBBY');const awards=flowerInventory.total;receiveRoom(roomState);assert.equal(flowerInventory.total,awards);leaveOnline();assert.equal(net,null);assert(!$('lobby').hidden);
+`,run);
+vm.runInContext(`choice=10;start();pressed={KeyZ:true};keys={};frame(last+16);assert(game.darkness>5.9);choice=11;start();keys={KeyX:true};pressed={};frame(last+16);assert.equal($('hud-name').textContent,'IVORY');assert.equal(document.querySelector('[data-action=fire]').textContent,'PUNCH');assert(!game.bullets.some(b=>b.owner===0));`,run);
 console.log('PASS: app integration checks cover Kaidog rendering and controls, spectator mode, bot-winner trophy, player-only award, and save/use flow. Browser visuals are not covered by this harness.');

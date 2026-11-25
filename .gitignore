@@ -1,8 +1,10 @@
 node_modules/
 .openai/
+.local/
 .env
 .env.*
 *.log
 .DS_Store
 work/
 outputs/
+dist/server/

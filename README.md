@@ -1,39 +1,55 @@
 # Stickman Smash Royale
 
-A playable, solo browser platform fighter built from Dante's game ideas with Codex assistance. Choose a stick fighter, battle four random bots, and be the last fighter standing.
+A browser platform fighting game built with Codex from Dante's game ideas: twelve fighters, seven maps, five lives each, wild powers, saved winning rewards, solo bots, and online multiplayer rooms.
 
-This repository preserves the complete playable version from November 25, 2026: all ten fighters, seven arenas, game art drawn in code, inventory, victory trophies, and automated checks.
+## Play with friends
 
-## Play locally
+Open [the public game](https://stickman-smash-royale-dante.dante-garcia-9136.chatgpt.site) on each device. No ChatGPT sign-in is required.
 
-No build step or dependencies are required. From the repository directory:
+1. Choose a fighter and enter a player name.
+2. One person selects a map and clicks **Create Room**.
+3. Share the six-character code. Friends choose different fighters, enter the code, and click **Join Room**.
+4. The host clicks **Start Match**. Two to five people can play; bots fill open slots for five fighters total.
+
+Online matches continue when one player leaves or switches tabs. After a short disconnect timeout, a bot takes over that fighter. Temporary network errors retry while the tab stays open. Refreshing the page loses that room session. Online matches cannot be paused. Rooms expire after 30 minutes without requests.
+
+The opening animated montage can be skipped with **Space** or **Skip Intro**, and replayed with **Watch Intro**. Reduced-motion preference skips autoplay.
+
+## Run locally
+
+Node.js **22.13 or newer** is required; no npm dependencies are needed. Node may print an experimental notice for its SQLite module.
 
 ```sh
-python3 -m http.server 8000 --directory dist
+npm start
 ```
 
-Open **http://localhost:8000** in a browser. Keep the server running while playing. ES modules require an HTTP server; opening `index.html` as a local file will not work.
+Open http://localhost:8000. The server creates a private `.local/rooms.sqlite` database. To connect devices on the same Wi-Fi:
 
-The existing hosted game is [here](https://stickman-smash-royale-dante.dante-garcia-9136.chatgpt.site). That deployment has its own private access settings; this public repository lets anyone download and run the game.
+```sh
+npm start -- --host 0.0.0.0
+```
+
+Other devices open `http://YOUR-COMPUTER-LAN-IP:8000`, subject to your network/firewall settings. For solo-only static hosting, run `python3 -m http.server 8000 --directory dist`. Rooms require the application server.
 
 ## Controls
 
-| Key / input | Action |
+| Input | Action |
 | --- | --- |
-| A / D or Left / Right | Move |
-| Space, W, or Up | Jump; jump twice for a double jump |
+| A/D or Left/Right | Move |
+| Space, W, or Up | Jump; double jump |
 | X | Attack with automatic aim |
 | Mouse + left click | Aim and shoot |
 | Z | Character power |
-| W / Up, S / Down near vines | Climb up / down |
+| W/Up or S/Down near a vine | Climb up/down |
 | Space on a vine | Jump off |
 | R | Activate the saved item selected in the lobby |
-| F | Use the active Fire Flower or Super Star |
-| Q | Order your unicorn army or zombie pack to attack the aimed-at enemy |
-| L, on Ocean Rafts | Hold to swim upward; A/D steers; Space leaps onto a raft |
-| Escape | Pause / resume |
+| F | Use active Fire Flower or Super Star |
+| Q | Order your unicorn army or zombie pack to attack the aimed-at rival |
+| L on Ocean Rafts | Hold to swim upward; A/D steers; Space leaps out |
+| Escape | Pause/resume solo play |
+| Space during montage | Skip intro |
 
-Touch controls are included; landscape orientation is recommended. Sound is optional.
+Touch controls are included; landscape is recommended. Sound is optional.
 
 ## Fighters
 
@@ -44,39 +60,38 @@ Touch controls are included; landscape orientation is recommended. Sound is opti
 | Bulwark | Three-second shield |
 | Bloom | Grow climbable vines |
 | Nova | Teleport beside the farthest surviving rival |
-| Blaze | One-hit fire sword and inferno lunge; nearby cats suppress his fire |
-| Kobalt | Inhale a nearby rival and copy their form, weapon, and power for 14 seconds |
+| Blaze | One-hit fire sword and lunge; cats suppress his fire |
+| Kobalt | Inhale and copy a rival's form, weapon, and power for 14 seconds |
 | Pixie | Touch rivals to recruit glitter-farting unicorn allies |
 | Rott | Green dog that turns touched rivals into zombie dog allies |
-| Kaidog | Dark-green atomic dog: 36-damage mouth balls and a 72-damage breath beam, with a six-second power cooldown |
+| Shade | Dim the arena for six seconds, without a full blackout |
+| Ivory | Punches and uppercuts, no gun; immune to Blaze attacks |
+| Kaidog | Dark-green atomic dog: 36-damage mouth balls and 72-damage breath beam; six-second power cooldown |
 
-## Arenas
+## Maps and rules
 
-Choose **Classic**, **Desert**, **Deserted Island**, **Cloud Islands**, **Volcano**, **City**, or **Ocean Rafts** in the lobby. Every map has its own platform layout and scenery. Cloud Islands has extra islands; Volcano has damaging lava. Ocean Rafts is the only map with swimmable water. Releasing L lets you dive. After four seconds fully submerged, drowning starts damaging your health. Bots can swim too.
+Choose **Classic**, **Desert**, **Deserted Island**, **Cloud Islands**, **Volcano**, **City**, or **Ocean Rafts**. Every arena has different collision geometry and scenery. Cloud Islands has extra islands; Volcano has damaging lava. Ocean Rafts is the only swimmable map. Release L to dive; after four seconds fully submerged, drowning drains health.
 
-## Match rules and rewards
+Exactly five distinct fighters enter each match, with five lives each. Knockouts and falls cost a life; zero means elimination. Eliminated players spectate until the last surviving fighter wins. If only an allied army remains, it breaks free for a final showdown.
 
-- Exactly five distinct characters fight each round: the player and four randomly selected bots.
-- Everyone starts with five lives. Knockouts and falls cost a life; zero lives means elimination.
-- Eliminated players spectate until the last surviving fighter wins. If only an allied army remains, its members break free for a final showdown.
-- The winner receives a stickman victory trophy. Player wins also earn saved items, alternating **Fire Flower, Super Star, Fire Flower, Super Star**, and so on.
-- Select an item in the lobby. R consumes and activates it during the round; starting a match does not spend anything.
-- Fire Flower gives exactly **five small, straight fireballs** fired with F. Aim with the mouse or arrow keys; otherwise they follow your facing direction. Remaining shots carry across respawns in that round.
-- Super Star gives **ten seconds of invincibility**, including against lava, drowning, falls, and the danger zone. F performs a close-range attack. Only one star may be activated per round.
-- Saved rewards use browser-local storage and are not synced across browsers or devices. Older saved flowers are preserved.
+The winner gets a stickman victory trophy. A winning human also earns a saved reward, alternating **Fire Flower, Super Star, Fire Flower, Super Star**. Rewards stay in the winner's browser and do not sync between devices. Existing saved flowers are preserved.
 
-Floating mystery blocks cycle between random armor (Wood, Iron, Diamond, Gold, Netherite, Wool, Emerald, Ruby), rings plus speed boosts, and size plus health changes. Jump into them from below; they recharge after seven seconds. Health and rapid-fire pickups also appear around the arena.
+Select a saved item in the lobby, then press R during a round to consume and activate it. Starting a round does not spend it. Fire Flower gives exactly five small straight fireballs fired with F, aimed with the mouse or arrow keys, otherwise following your facing direction. Remaining shots carry across respawns that round. Ivory stays unarmed: his flower uses become five close-range fire punches instead of projectiles. Super Star gives ten seconds of invincibility, including against danger zones, drowning, lava, and falls; F attacks nearby rivals. Only one star activation is allowed per round.
 
-## Source and verification
+Floating mystery blocks cycle between random armor (Wood, Iron, Diamond, Gold, Netherite, Wool, Emerald, Ruby), rings plus speed, and size plus health. Jump into them from below; they recharge after seven seconds. Health and rapid-fire pickups also spawn.
 
-`dist/` contains the actual handwritten, buildless application source, including the HTML, CSS, and JavaScript modules. It is deliberately tracked so the game is immediately runnable. There are no bundled binary game assets or required API keys. Google Fonts are optional external styling resources; fallback fonts are configured.
+## Source and tests
 
-With Node.js 22 or newer:
+`dist/` contains the authored HTML, CSS, and JavaScript source and procedural game art. There are no required external game assets or API keys. Google Fonts are optional, with fallback fonts configured.
+
+`server/rooms.js` runs the game engine on the server. Clients send bounded control inputs and receive authoritative snapshots. Room revisions prevent concurrent updates from overwriting one another. Session tokens are returned only to the joining player; only their hashes are stored in the database. Bots fill unused and disconnected slots.
+
+`npm run build` embeds browser assets and room code into `dist/server/index.js`. The hosted version uses a Cloudflare Worker with a D1 binding named `DB`; the local server runs the same API using SQLite. Apply `drizzle/0000_multiplayer_rooms.sql` before deploying to your own Worker host. Private Sites hosting metadata is excluded from this public repository.
 
 ```sh
 npm test
 ```
 
-The current checks pass **165 gameplay checks** and **41 complete seeded matches across all seven maps**, plus an app integration harness that exercises actual app controls and rendering code with a mocked DOM/canvas. This is automated programmatic coverage, not a visual browser acceptance test. Fresh visual browser QA was blocked by the local agent-owned browser allocation permissions; touch input has not been checked on a physical phone.
+Verification includes **179 gameplay checks and 41 complete seeded matches across all seven arenas**, app integration checks, and multiplayer tests covering concurrent joins, capacity, session authentication, independent human controls, authoritative powers and item limits, remote winners, disconnection fallback, and montage skipping. HTTP smoke tests use two independent sessions against the room server.
 
-Private hosting identifiers, credentials, browser profiles, local storage, scratch files, and deployment archives are excluded from this repository. This is a solo game against bots; online multiplayer is not implemented.
+This is programmatic coverage. Fresh visual browser QA was blocked by agent-owned browser allocation permissions; touch input has not been checked on a physical phone. Room play uses HTTP snapshots and is intended for casual play, rather than competitive low-latency networking. Saved inventory is browser-local and is not a ranked anti-cheat system.

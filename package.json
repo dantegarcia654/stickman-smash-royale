@@ -1,1 +1,10 @@
-{"name":"stickman-smash-royale","private":true,"type":"module","scripts":{"test":"node test.mjs && node test-app.mjs"}}
+{
+  "name": "stickman-smash-royale",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node test.mjs && node test-app.mjs && node test-multiplayer.mjs",
+    "build": "node scripts/build-server.mjs",
+    "start": "node scripts/build-server.mjs && node scripts/local-server.mjs"
+  }
+}
