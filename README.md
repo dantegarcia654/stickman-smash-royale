@@ -49,7 +49,9 @@ Other devices open `http://YOUR-COMPUTER-LAN-IP:8000`, subject to your network/f
 | Escape | Pause/resume solo play |
 | Space during montage | Skip intro |
 
-Touch controls are included; landscape is recommended. Sound is optional.
+Phone and iPad controls are detected automatically, including tablets that also have a mouse or trackpad. Use **Touch On/Off** in the header to choose controls manually. The left thumb stick moves horizontally; slide it up/down to climb vines. The larger right buttons jump/double jump, attack, and use powers. Secondary buttons activate saved items, use them, command an army, or swim when relevant. Fire and item attacks auto-aim; touching the arena temporarily provides manual aim. You can hold movement and attack while tapping Jump with another finger.
+
+The camera follows your fighter on small portrait screens. A small arena overview marks your position with a white outline. Layouts accommodate portrait, landscape, display cutouts, and changing browser bars. Keyboard and mouse controls remain available on computers and hybrid devices. No app installation is required. Sound is optional.
 
 ## Fighters
 
@@ -92,6 +94,6 @@ Floating mystery blocks cycle between random armor (Wood, Iron, Diamond, Gold, N
 npm test
 ```
 
-Verification includes **179 gameplay checks and 41 complete seeded matches across all seven arenas**, app integration checks, and multiplayer tests covering concurrent joins, capacity, session authentication, independent human controls, authoritative powers and item limits, remote winners, disconnection fallback, and montage skipping. HTTP smoke tests use two independent sessions against the room server.
+Verification includes **179 gameplay checks and 41 complete seeded matches across all seven arenas**, app integration checks, **19 touch/viewport checks** across eight phone/tablet sizes and three desktop sizes, and multiplayer tests covering concurrent joins, capacity, session authentication, independent human controls, authoritative powers and item limits, remote winners, disconnection fallback, and montage skipping. HTTP smoke tests use two independent sessions against the room server.
 
 This is programmatic coverage. Fresh visual browser QA was blocked by agent-owned browser allocation permissions; touch input has not been checked on a physical phone. Room play uses HTTP snapshots and is intended for casual play, rather than competitive low-latency networking. Saved inventory is browser-local and is not a ranked anti-cheat system.
