@@ -13,7 +13,7 @@ Open [the public game](https://stickman-smash-royale-dante.dante-garcia-9136.cha
 
 Online matches continue when one player leaves or switches tabs. After a short disconnect timeout, a bot takes over that fighter. Temporary network errors retry while the tab stays open. Refreshing the page loses that room session. Online matches cannot be paused. Rooms expire after 30 minutes without requests.
 
-The opening animated montage can be skipped with **Space** or **Skip Intro**, and replayed with **Watch Intro**. Reduced-motion preference skips autoplay.
+The 22-second opening cartoon cutscene shows choreographed fights and the full cast's powers: dash/shield collisions, sword blocks and uppercuts, vines and teleportation, inhale/copy, atomic breath and darkness, and unicorn/zombie transformations. It can be skipped with **Space** or **Skip Intro**, and replayed with **Watch Intro**. Reduced-motion preference skips autoplay.
 
 ## Run locally
 
@@ -68,7 +68,7 @@ The camera follows your fighter on small portrait screens. A small arena overvie
 | Rott | Green dog that turns touched rivals into zombie dog allies |
 | Shade | Six-second proximity aura; entering rivals get ten seconds of near-black vision while Shade keeps his sight |
 | Ivory | Punches and uppercuts, no gun; immune to Blaze attacks |
-| Kaidog | Dark-green atomic dog: 36-damage mouth balls and 72-damage breath beam; six-second power cooldown |
+| Kaidog | Dark-green atomic dog: 36-damage mouth balls and 72-damage breath beam; five-second power cooldown |
 
 ## Maps and rules
 
@@ -94,10 +94,12 @@ Floating mystery blocks cycle between random armor (Wood, Iron, Diamond, Gold, N
 npm test
 ```
 
-Verification includes **179 gameplay checks and 41 complete seeded matches across all seven arenas**, app integration checks, **13 proximity-blindness checks**, **19 touch/viewport checks** across eight phone/tablet sizes and three desktop sizes, and multiplayer tests covering concurrent joins, capacity, session authentication, independent human controls, authoritative powers and item limits, remote winners, disconnection fallback, and montage skipping. HTTP smoke tests use two independent sessions against the room server.
+Verification includes **191 gameplay checks and 41 complete seeded matches across all seven arenas**, app integration checks, **13 proximity-blindness checks**, **19 touch/viewport checks** across eight phone/tablet sizes and three desktop sizes, and multiplayer tests covering concurrent joins, capacity, session authentication, independent human controls, authoritative powers and item limits, remote winners, disconnection fallback, and montage skipping. HTTP smoke tests use two independent sessions against the room server.
 
 This is programmatic coverage. Fresh visual browser QA was blocked by agent-owned browser allocation permissions; touch input has not been checked on a physical phone. Room play uses HTTP snapshots and is intended for casual play, rather than competitive low-latency networking. Saved inventory is browser-local and is not a ranked anti-cheat system.
 
 ## Shade proximity blindness
 
 Z activates a six-second aura with a 250-unit radius. Rivals entering it get ten seconds of nearly black vision, with only a faint small area around themselves visible. Remaining inside does not repeatedly restart the timer; leaving and re-entering can apply a fresh ten seconds. Shade and allies are unaffected by their own aura. Shields and Super Star protection block a new application. Blindness fades out at the end and clears on knockout/respawn. Blinded bots can sense only nearby rivals; touch auto-aim and the minimap also respect that limited sight. The server stores blindness per fighter, so a multiplayer victim's view changes without darkening the caster's screen.
+
+All twelve Z super moves recharge in five seconds. Power durations, including Shade's aura and the ten-second blindness effect, are separate from recharge time.

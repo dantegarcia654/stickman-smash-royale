@@ -1,17 +1,17 @@
 import {CLASSIC_PLATFORMS,getMap} from './maps.js';
 export const FIGHTERS=[
-{name:'VOLT',role:'The speedster',color:'#ffe34d',power:'Lightning dash',desc:'Surge through rivals. Hit hard, move faster.',cool:6,speed:335},
-{name:'EMBER',role:'The firestarter',color:'#ff8055',power:'Firework burst',desc:'Unleash a fan of explosive fire bolts.',cool:7,speed:295},
-{name:'BULWARK',role:'The tank',color:'#74b7ff',power:'Iron shield',desc:'Block all damage for three precious seconds.',cool:10,speed:260},
-{name:'BLOOM',role:'The survivor',color:'#a4ed8a',power:'Vine climb',desc:'Grow a towering vine. Hold W or ↑ nearby to climb; Space jumps off.',cool:11,speed:305},
-{name:'NOVA',role:'The wildcard',color:'#cda0ff',power:'Far blink',desc:'Teleport beside the farthest surviving fighter. Make some distance.',cool:8,speed:300},
-{name:'BLAZE',role:'The swordmaster',color:'#ff4055',power:'Inferno lunge',desc:'X swings a one-hit fire sword up close. Z lunges with a blazing slash. Cats put out your fire!',cool:8,speed:320},
-{name:'KOBALT',role:'The shapeshifter',color:'#3658c9',power:'Inhale & copy',desc:'Z inhales a nearby rival and becomes them for 14s. Z uses their power; X uses their weapon.',cool:6,speed:305},
-{name:'PIXIE',role:'The glitter menace',color:'#ff8fdb',power:'Glitter gallop',desc:'Touch rivals to recruit a glitter-farting unicorn army. Aim at an enemy + Q to command. Z sprints.',cool:7,speed:325},
-{name:'ROTT',role:'The zombie dog',color:'#48db72',power:'Rotten pounce',desc:'Touch rivals to turn them into zombie dogs in your pack. X bites. Z pounces. Aim + Q commands.',cool:7,speed:335},
-{name:'KAIDOG',role:'The atomic hound',color:'#287a53',power:'Atomic breath',desc:'Stronger atomic hound: X fires 36-damage mouth balls. Z blasts a 72-damage beam (6s cooldown).',cool:6,speed:305},
-{name:'SHADE',role:'The lights-out trickster',color:'#3c4354',power:'Blinding aura',desc:'Z surrounds Shade with a 6s aura. Nearby rivals are nearly blinded for 10s when they enter. Shade keeps his sight.',cool:12,speed:315},
-{name:'IVORY',role:'The bare-knuckle fighter',color:'#f4f5ff',power:'Rising uppercut',desc:'No gun. X punches; Z hits a powerful uppercut. Immune to every attack from Blaze.',cool:7,speed:320}];
+{name:'VOLT',role:'The speedster',color:'#ffe34d',power:'Lightning dash',desc:'Surge through rivals. Hit hard, move faster.',cool:5,speed:335},
+{name:'EMBER',role:'The firestarter',color:'#ff8055',power:'Firework burst',desc:'Unleash a fan of explosive fire bolts.',cool:5,speed:295},
+{name:'BULWARK',role:'The tank',color:'#74b7ff',power:'Iron shield',desc:'Block all damage for three precious seconds.',cool:5,speed:260},
+{name:'BLOOM',role:'The survivor',color:'#a4ed8a',power:'Vine climb',desc:'Grow a towering vine. Hold W or ↑ nearby to climb; Space jumps off.',cool:5,speed:305},
+{name:'NOVA',role:'The wildcard',color:'#cda0ff',power:'Far blink',desc:'Teleport beside the farthest surviving fighter. Make some distance.',cool:5,speed:300},
+{name:'BLAZE',role:'The swordmaster',color:'#ff4055',power:'Inferno lunge',desc:'X swings a one-hit fire sword up close. Z lunges with a blazing slash. Cats put out your fire!',cool:5,speed:320},
+{name:'KOBALT',role:'The shapeshifter',color:'#3658c9',power:'Inhale & copy',desc:'Z inhales a nearby rival and becomes them for 14s. Z uses their power; X uses their weapon.',cool:5,speed:305},
+{name:'PIXIE',role:'The glitter menace',color:'#ff8fdb',power:'Glitter gallop',desc:'Touch rivals to recruit a glitter-farting unicorn army. Aim at an enemy + Q to command. Z sprints.',cool:5,speed:325},
+{name:'ROTT',role:'The zombie dog',color:'#48db72',power:'Rotten pounce',desc:'Touch rivals to turn them into zombie dogs in your pack. X bites. Z pounces. Aim + Q commands.',cool:5,speed:335},
+{name:'KAIDOG',role:'The atomic hound',color:'#287a53',power:'Atomic breath',desc:'Stronger atomic hound: X fires 36-damage mouth balls. Z blasts a 72-damage beam (5s cooldown).',cool:5,speed:305},
+{name:'SHADE',role:'The lights-out trickster',color:'#3c4354',power:'Blinding aura',desc:'Z surrounds Shade with a 6s aura. Nearby rivals are nearly blinded for 10s when they enter. Shade keeps his sight.',cool:5,speed:315},
+{name:'IVORY',role:'The bare-knuckle fighter',color:'#f4f5ff',power:'Rising uppercut',desc:'No gun. X punches; Z hits a powerful uppercut. Immune to every attack from Blaze.',cool:5,speed:320}];
 export const ARMORS=[{name:'WOOD',color:'#ad7748',points:25},{name:'IRON',color:'#c4cfda',points:55},{name:'DIAMOND',color:'#62e6ef',points:80},{name:'GOLD',color:'#ffd45c',points:40},{name:'NETHERITE',color:'#635569',points:100},{name:'WOOL',color:'#f8e7ef',points:15},{name:'EMERALD',color:'#47e698',points:85},{name:'RUBY',color:'#f45878',points:90}];
 export const PLATFORMS=CLASSIC_PLATFORMS;
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
@@ -63,7 +63,7 @@ export class Game {
  shoot(f,angle){if(f.shot>0||!this.active(f)||(f.type===5&&f.scared>0))return false;if(f.zombie>0)return this.dogBite(f,angle);if(f.unicorn>0)return this.unicornCharge(f,angle);if(f.type===8)return this.dogBite(f,angle);if(f.type===9)return this.mouthBall(f,angle);if(f.type===11)return this.punch(f,angle);f.aim=angle;f.face=Math.cos(angle)>=0?1:-1;if(f.type===5){f.shot=.7;f.slash=.24;f.slashHits=new Set();this.swordStrike(f);this.effect(f.x+Math.cos(angle)*70,f.y-30+Math.sin(angle)*70,'#ff933d',9);return true;}f.face=Math.cos(angle)>=0?1:-1;f.shot=f.boost>0?.095:(f.id===0||f.human)?.23:.4;this.bullets.push({x:f.x+Math.cos(angle)*24*f.size,y:f.y-30*f.size+Math.sin(angle)*24*f.size,vx:Math.cos(angle)*820+f.vx*.2,vy:Math.sin(angle)*820,life:1.4,owner:f.id,power:1,color:FIGHTERS[f.type].color});return true;}
  inhaleRivals(f,dt){
  for(const e of this.fighters){if(e===f||!this.active(e)||this.allied(e,f)||e.shield>0||e.starTime>0||e.type===6)continue;const dx=e.x-f.x,dy=e.y-f.y,d=Math.hypot(dx,dy),a=Math.atan2(dy,dx);const delta=Math.atan2(Math.sin(a-f.aim),Math.cos(a-f.aim));if(d>280||Math.abs(delta)>1.05)continue;
- if(d<60){f.type=e.type;f.copyTime=14;f.inhale=0;f.shield=Math.max(f.shield,.65);f.cool=.45;f.shot=0;this.effect(f.x,f.y-30,FIGHTERS[e.type].color,40);this.effect(e.x,e.y-30,'#86a9ff',18);this.hit(e,10,(Math.sign(dx)||f.face)*320,-180,f.id);e.stun=.6;e.slash=0;e.dash=0;e.inhale=0;this.feed.unshift(`${f.id===0?'YOU':'KOBALT'} copied ${FIGHTERS[e.type].name}`);this.feed=this.feed.slice(0,3);return;}
+ if(d<60){f.type=e.type;f.copyTime=14;f.inhale=0;f.shield=Math.max(f.shield,.65);f.cool=FIGHTERS[f.type].cool;f.shot=0;this.effect(f.x,f.y-30,FIGHTERS[e.type].color,40);this.effect(e.x,e.y-30,'#86a9ff',18);this.hit(e,10,(Math.sign(dx)||f.face)*320,-180,f.id);e.stun=.6;e.slash=0;e.dash=0;e.inhale=0;this.feed.unshift(`${f.id===0?'YOU':'KOBALT'} copied ${FIGHTERS[e.type].name}`);this.feed=this.feed.slice(0,3);return;}
  const pull=950*dt;e.vx-=dx/d*pull;e.vy-=dy/d*pull;e.stun=Math.max(e.stun,.08);this.effect(e.x,e.y-30,'#86a9ff',1);
  }
  }
