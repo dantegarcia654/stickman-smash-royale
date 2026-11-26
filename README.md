@@ -103,3 +103,9 @@ This is programmatic coverage. Fresh visual browser QA was blocked by agent-owne
 Z activates a six-second aura with a 250-unit radius. Rivals entering it get ten seconds of nearly black vision, with only a faint small area around themselves visible. Remaining inside does not repeatedly restart the timer; leaving and re-entering can apply a fresh ten seconds. Shade and allies are unaffected by their own aura. Shields and Super Star protection block a new application. Blindness fades out at the end and clears on knockout/respawn. Blinded bots can sense only nearby rivals; touch auto-aim and the minimap also respect that limited sight. The server stores blindness per fighter, so a multiplayer victim's view changes without darkening the caster's screen.
 
 All twelve Z super moves recharge in five seconds. Power durations, including Shade's aura and the ten-second blindness effect, are separate from recharge time.
+
+## Combat audio and complete instructions
+
+Original locally synthesized laser shots, sword-swing glides, metallic sword hits, punch/impact sounds and atomic breath are triggered by actual combat events, including multiplayer. The cutscene also has timed combat cues. Sound is on by default and unlocks after a tap or keypress; Sound On/Off mutes it. The mixer limits overlapping voices, compresses the mix and suppresses duplicate snapshot events. Six compact mono WAV assets are included.
+
+The full How to Play guide opens after the cutscene ends or is skipped, including for reduced-motion visitors. It covers all keyboard/touch controls, every fighter, five-second powers, maps, blocks, lives, swimming, rewards, armies and room joining. Reopen it with How to Play or H. Solo play pauses when the guide opens during a match; online matches continue.

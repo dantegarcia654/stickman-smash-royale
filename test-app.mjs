@@ -1,3 +1,5 @@
+import {CombatAudio} from './dist/combat-audio.js';
+import {instructionsHTML} from './dist/instructions.js';
 import {canSeeFighter,drawBlindness} from './dist/vision.js';
 import {bindTouchControls} from './dist/touch-controls.js';
 import {computeView,screenToWorld} from './dist/viewport.js';
@@ -19,8 +21,9 @@ const cards=FIGHTERS.map((_,i)=>({...node('card'+i),dataset:{choice:String(i)}})
 const actions=['left','right','jump','climb','swim','flower','special','activate','command','fire'].map(action=>({...node('action-'+action),dataset:{action}}));
 const storageMap=new Map(),storage={getItem:k=>storageMap.get(k)||null,setItem:(k,v)=>storageMap.set(k,v)};
 const document={createElement:tag=>({...node("created-"+Math.random()),tagName:tag}),getElementById:node,body:{classList:classes()},addEventListener(){},querySelector:s=>s==='.result'?node('result'):s.startsWith('[data-action=')?actions.find(n=>n.dataset.action===s.slice(13,-1)):node(s),querySelectorAll:s=>s==='.fighter-card'?cards:s==='[data-action]'?actions:[]};
+let introOptions;
 const appMath=Object.create(Math);appMath.random=()=>.99;
-const sandbox={Math:appMath,canSeeFighter,drawBlindness,bindTouchControls,computeView,screenToWorld,unpackGame,packGame,NetworkRoom:class {},mountMontage:()=>({close(){}}),performance,MAPS,getMap,drawBackdrop,drawTerrain,drawWater,Game,FIGHTERS,PLATFORMS,ARMORS,victoryTrophy,RewardInventory,FLOWER_KEY,flowerIcon,starIcon,ITEM_NAMES,document,window:{localStorage:storage,events:{},addEventListener(t,fn){this.events[t]=fn;}},matchMedia:()=>({matches:false}),devicePixelRatio:1,innerWidth:1200,innerHeight:740,requestAnimationFrame(){},crypto:{randomUUID},console,assert};
+const sandbox={CombatAudio,instructionsHTML,Math:appMath,canSeeFighter,drawBlindness,bindTouchControls,computeView,screenToWorld,unpackGame,packGame,NetworkRoom:class {},mountMontage:opts=>{introOptions=opts;return {close(){}};},performance,MAPS,getMap,drawBackdrop,drawTerrain,drawWater,Game,FIGHTERS,PLATFORMS,ARMORS,victoryTrophy,RewardInventory,FLOWER_KEY,flowerIcon,starIcon,ITEM_NAMES,document,window:{localStorage:storage,events:{},addEventListener(t,fn){this.events[t]=fn;}},matchMedia:()=>({matches:false}),devicePixelRatio:1,innerWidth:1200,innerHeight:740,requestAnimationFrame(){},crypto:{randomUUID},console,assert};
 const source=fs.readFileSync('dist/game.js','utf8').replace(/^import .*;\n/gm,'');
 const run=vm.createContext(sandbox);vm.runInContext(source,run);
 vm.runInContext(`
@@ -58,4 +61,5 @@ touch=true;choice=0;start();syncInputMode();const tap=(id)=>({pointerId:id,point
 vm.runInContext(`
 touch=true;choice=0;start();pointer.used=false;pointer.down=false;touchAimUntil=0;game.player.x=600;game.player.y=700;game.player.blindTime=10;game.fighters.slice(1).forEach((f,i)=>{f.x=900+i*80;f.y=500;});keys={KeyX:true};frame(last+16);assert($('loot-status').innerHTML.includes('BLINDED'));assert.equal(($('radar').innerHTML.match(/<span/g)||[]).length,1);const blindShot=game.bullets.find(b=>b.owner===0);assert(blindShot);assert.equal(blindShot.vy,0);keys={};game.player.blindTime=0;updateHud();assert(!$('loot-status').innerHTML.includes('BLINDED'));
 `,run);
+vm.runInContext('game=null;',run);introOptions.onClose();vm.runInContext(`assert(helpOpen);assert(!$('help-panel').hidden);for(const f of FIGHTERS)assert($('help-content').innerHTML.includes(f.name));closeHelp();assert(!helpOpen);assert($('help-panel').hidden);`,run);
 console.log('PASS: app integration checks cover Kaidog rendering and controls, spectator mode, bot-winner trophy, player-only award, and save/use flow. Browser visuals are not covered by this harness.');
