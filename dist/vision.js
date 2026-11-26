@@ -1,0 +1,3 @@
+export const BLIND_SIGHT=110;
+export function canSeeFighter(viewer,fighter){return !(viewer.blindTime>0)||viewer.id===fighter.id||Math.hypot(fighter.x-viewer.x,fighter.y-viewer.y)<=BLIND_SIGHT;}
+export function drawBlindness(ctx,viewer){if(!(viewer?.blindTime>0))return false;const fade=Math.min(1,viewer.blindTime/.6),shade=ctx.createRadialGradient(viewer.x,viewer.y-30,16,viewer.x,viewer.y-30,BLIND_SIGHT);shade.addColorStop(0,`rgba(1,2,8,${.55*fade})`);shade.addColorStop(.55,`rgba(1,2,8,${.86*fade})`);shade.addColorStop(1,`rgba(1,2,8,${.97*fade})`);ctx.fillStyle=shade;ctx.fillRect(-500,-500,2400,2000);return true;}

@@ -1,3 +1,4 @@
+import {canSeeFighter,drawBlindness} from './dist/vision.js';
 import {bindTouchControls} from './dist/touch-controls.js';
 import {computeView,screenToWorld} from './dist/viewport.js';
 import {unpackGame,packGame} from './dist/snapshot.js';
@@ -18,7 +19,7 @@ const cards=FIGHTERS.map((_,i)=>({...node('card'+i),dataset:{choice:String(i)}})
 const actions=['left','right','jump','climb','swim','flower','special','activate','command','fire'].map(action=>({...node('action-'+action),dataset:{action}}));
 const storageMap=new Map(),storage={getItem:k=>storageMap.get(k)||null,setItem:(k,v)=>storageMap.set(k,v)};
 const document={createElement:tag=>({...node("created-"+Math.random()),tagName:tag}),getElementById:node,body:{classList:classes()},addEventListener(){},querySelector:s=>s==='.result'?node('result'):s.startsWith('[data-action=')?actions.find(n=>n.dataset.action===s.slice(13,-1)):node(s),querySelectorAll:s=>s==='.fighter-card'?cards:s==='[data-action]'?actions:[]};
-const sandbox={bindTouchControls,computeView,screenToWorld,unpackGame,packGame,NetworkRoom:class {},mountMontage:()=>({close(){}}),performance,MAPS,getMap,drawBackdrop,drawTerrain,drawWater,Game,FIGHTERS,PLATFORMS,ARMORS,victoryTrophy,RewardInventory,FLOWER_KEY,flowerIcon,starIcon,ITEM_NAMES,document,window:{localStorage:storage,events:{},addEventListener(t,fn){this.events[t]=fn;}},matchMedia:()=>({matches:false}),devicePixelRatio:1,innerWidth:1200,innerHeight:740,requestAnimationFrame(){},crypto:{randomUUID},console,assert};
+const sandbox={canSeeFighter,drawBlindness,bindTouchControls,computeView,screenToWorld,unpackGame,packGame,NetworkRoom:class {},mountMontage:()=>({close(){}}),performance,MAPS,getMap,drawBackdrop,drawTerrain,drawWater,Game,FIGHTERS,PLATFORMS,ARMORS,victoryTrophy,RewardInventory,FLOWER_KEY,flowerIcon,starIcon,ITEM_NAMES,document,window:{localStorage:storage,events:{},addEventListener(t,fn){this.events[t]=fn;}},matchMedia:()=>({matches:false}),devicePixelRatio:1,innerWidth:1200,innerHeight:740,requestAnimationFrame(){},crypto:{randomUUID},console,assert};
 const source=fs.readFileSync('dist/game.js','utf8').replace(/^import .*;\n/gm,'');
 const run=vm.createContext(sandbox);vm.runInContext(source,run);
 vm.runInContext(`
@@ -37,7 +38,7 @@ let sent=null;net={lastOk:performance.now(),input:{},capture(v){sent=v;},leave()
 roomState.phase='playing';roomState.game=packGame(remote);receiveRoom(roomState);assert.equal(game.player.id,1);assert.equal(game.player.type,9);assert($('room-panel').hidden);keys={KeyX:true};pressed={};const bulletCount=game.bullets.length;frame(last+16);assert(sent.fire);assert.equal(game.bullets.length,bulletCount);assert.equal($('hud-name').textContent,'KAIDOG');
 remote.over=true;remote.winnerId=1;remote.lastDefeated=0;for(const f of remote.fighters)if(f.id!==1){f.alive=false;f.lives=0;}roomState.phase='finished';roomState.game=packGame(remote);receiveRoom(roomState);assert(game.won);assert(!$('flower-award').hidden);assert.equal($('again').textContent,'RETURN TO LOBBY');const awards=flowerInventory.total;receiveRoom(roomState);assert.equal(flowerInventory.total,awards);leaveOnline();assert.equal(net,null);assert(!$('lobby').hidden);
 `,run);
-vm.runInContext(`choice=10;start();pressed={KeyZ:true};keys={};frame(last+16);assert(game.darkness>5.9);choice=11;start();keys={KeyX:true};pressed={};frame(last+16);assert.equal($('hud-name').textContent,'IVORY');assert.equal(document.querySelector('[data-action=fire]').textContent,'PUNCH');assert(!game.bullets.some(b=>b.owner===0));`,run);
+vm.runInContext(`choice=10;start();pressed={KeyZ:true};keys={};frame(last+16);assert(game.player.blindAura>5.9);choice=11;start();keys={KeyX:true};pressed={};frame(last+16);assert.equal($('hud-name').textContent,'IVORY');assert.equal(document.querySelector('[data-action=fire]').textContent,'PUNCH');assert(!game.bullets.some(b=>b.owner===0));`,run);
 vm.runInContext(`
 // Actual touch callbacks drive the same game input on a small phone viewport.
 innerWidth=390;innerHeight=844;touch=true;choice=0;start();syncInputMode();$('move-stick').getBoundingClientRect=()=>({left:0,top:0,width:120,height:120});
@@ -52,5 +53,8 @@ $('input-mode').onclick();assert(!touch);assert($('touch').hidden);keys={KeyD:tr
 `,run);
 vm.runInContext(`
 touch=true;choice=0;start();syncInputMode();const tap=(id)=>({pointerId:id,pointerType:'touch',button:0,clientX:200,clientY:300,preventDefault(){}});canvas.events.pointerdown(tap(70));assert(pointer.down);window.events.pointerup(tap(71));assert(pointer.down);window.events.pointerup(tap(70));assert(!pointer.down);$('move-stick').onpointerdown(finger(72,110,60));document.querySelector('[data-action=fire]').onpointerdown(finger(73));window.events.orientationchange();assert(!keys.KeyX);assert.equal(touchAxes.x,0);assert.equal(Object.keys(pressed).length,0);
+`,run);
+vm.runInContext(`
+touch=true;choice=0;start();pointer.used=false;pointer.down=false;touchAimUntil=0;game.player.x=600;game.player.y=700;game.player.blindTime=10;game.fighters.slice(1).forEach((f,i)=>{f.x=900+i*80;f.y=500;});keys={KeyX:true};frame(last+16);assert($('loot-status').innerHTML.includes('BLINDED'));assert.equal(($('radar').innerHTML.match(/<span/g)||[]).length,1);const blindShot=game.bullets.find(b=>b.owner===0);assert(blindShot);assert.equal(blindShot.vy,0);keys={};game.player.blindTime=0;updateHud();assert(!$('loot-status').innerHTML.includes('BLINDED'));
 `,run);
 console.log('PASS: app integration checks cover Kaidog rendering and controls, spectator mode, bot-winner trophy, player-only award, and save/use flow. Browser visuals are not covered by this harness.');

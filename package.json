@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node test.mjs && node test-app.mjs && node test-multiplayer.mjs && node test-touch.mjs",
+    "test": "node test.mjs && node test-app.mjs && node test-multiplayer.mjs && node test-touch.mjs && node test-vision.mjs",
     "build": "node scripts/build-server.mjs",
     "start": "node scripts/build-server.mjs && node scripts/local-server.mjs"
   }

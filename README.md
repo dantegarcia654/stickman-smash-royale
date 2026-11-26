@@ -66,7 +66,7 @@ The camera follows your fighter on small portrait screens. A small arena overvie
 | Kobalt | Inhale and copy a rival's form, weapon, and power for 14 seconds |
 | Pixie | Touch rivals to recruit glitter-farting unicorn allies |
 | Rott | Green dog that turns touched rivals into zombie dog allies |
-| Shade | Dim the arena for six seconds, without a full blackout |
+| Shade | Six-second proximity aura; entering rivals get ten seconds of near-black vision while Shade keeps his sight |
 | Ivory | Punches and uppercuts, no gun; immune to Blaze attacks |
 | Kaidog | Dark-green atomic dog: 36-damage mouth balls and 72-damage breath beam; six-second power cooldown |
 
@@ -94,6 +94,10 @@ Floating mystery blocks cycle between random armor (Wood, Iron, Diamond, Gold, N
 npm test
 ```
 
-Verification includes **179 gameplay checks and 41 complete seeded matches across all seven arenas**, app integration checks, **19 touch/viewport checks** across eight phone/tablet sizes and three desktop sizes, and multiplayer tests covering concurrent joins, capacity, session authentication, independent human controls, authoritative powers and item limits, remote winners, disconnection fallback, and montage skipping. HTTP smoke tests use two independent sessions against the room server.
+Verification includes **179 gameplay checks and 41 complete seeded matches across all seven arenas**, app integration checks, **13 proximity-blindness checks**, **19 touch/viewport checks** across eight phone/tablet sizes and three desktop sizes, and multiplayer tests covering concurrent joins, capacity, session authentication, independent human controls, authoritative powers and item limits, remote winners, disconnection fallback, and montage skipping. HTTP smoke tests use two independent sessions against the room server.
 
 This is programmatic coverage. Fresh visual browser QA was blocked by agent-owned browser allocation permissions; touch input has not been checked on a physical phone. Room play uses HTTP snapshots and is intended for casual play, rather than competitive low-latency networking. Saved inventory is browser-local and is not a ranked anti-cheat system.
+
+## Shade proximity blindness
+
+Z activates a six-second aura with a 250-unit radius. Rivals entering it get ten seconds of nearly black vision, with only a faint small area around themselves visible. Remaining inside does not repeatedly restart the timer; leaving and re-entering can apply a fresh ten seconds. Shade and allies are unaffected by their own aura. Shields and Super Star protection block a new application. Blindness fades out at the end and clears on knockout/respawn. Blinded bots can sense only nearby rivals; touch auto-aim and the minimap also respect that limited sight. The server stores blindness per fighter, so a multiplayer victim's view changes without darkening the caster's screen.
