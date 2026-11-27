@@ -109,3 +109,11 @@ All twelve Z super moves recharge in five seconds. Power durations, including Sh
 Original locally synthesized laser shots, sword-swing glides, metallic sword hits, punch/impact sounds and atomic breath are triggered by actual combat events, including multiplayer. The cutscene also has timed combat cues. Sound is on by default and unlocks after a tap or keypress; Sound On/Off mutes it. The mixer limits overlapping voices, compresses the mix and suppresses duplicate snapshot events. Six compact mono WAV assets are included.
 
 The full How to Play guide opens after the cutscene ends or is skipped, including for reduced-motion visitors. It covers all keyboard/touch controls, every fighter, five-second powers, maps, blocks, lives, swimming, rewards, armies and room joining. Reopen it with How to Play or H. Solo play pauses when the guide opens during a match; online matches continue.
+
+## iPhone Home Screen app
+
+Open the public game in Safari, tap Share, choose Add to Home Screen, leave Open as Web App enabled if offered, and tap Add. Launch the new Stickman Smash icon to play without Safari's address and tab bars. The in-game Install App button shows these steps; Safari requires the final installation taps on your device.
+
+The standalone manifest, Apple launch metadata, 180/192/512-pixel icons and safe-area layouts are included. A content-versioned service worker caches the complete solo shell, procedural cutscene and audio after the first online load; rooms remain network-only and are never cached. Updates wait for an explicit Update Game action from the lobby, and reward storage is preserved.
+
+During a browser match the arena uses a stable small viewport, so expanding/collapsing browser bars do not repeatedly resize the canvas. Standalone mode uses the app viewport. Input clears on rotation, backgrounding and capture loss. Gameplay suppresses page-pan, selection, pinch and long-press gestures without disabling scrolling/zooming in menus. The mobile match header collapses into Menu for resume, help, mute and return to lobby. Returning visits skip automatic intro playback; Watch Intro remains available.

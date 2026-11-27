@@ -1,3 +1,4 @@
+import {mountPhoneShell,standaloneMode,playViewportHeight} from './dist/phone-shell.js';
 import {CombatAudio} from './dist/combat-audio.js';
 import {instructionsHTML} from './dist/instructions.js';
 import {canSeeFighter,drawBlindness} from './dist/vision.js';
@@ -23,7 +24,7 @@ const storageMap=new Map(),storage={getItem:k=>storageMap.get(k)||null,setItem:(
 const document={createElement:tag=>({...node("created-"+Math.random()),tagName:tag}),getElementById:node,body:{classList:classes()},addEventListener(){},querySelector:s=>s==='.result'?node('result'):s.startsWith('[data-action=')?actions.find(n=>n.dataset.action===s.slice(13,-1)):node(s),querySelectorAll:s=>s==='.fighter-card'?cards:s==='[data-action]'?actions:[]};
 let introOptions;
 const appMath=Object.create(Math);appMath.random=()=>.99;
-const sandbox={CombatAudio,instructionsHTML,Math:appMath,canSeeFighter,drawBlindness,bindTouchControls,computeView,screenToWorld,unpackGame,packGame,NetworkRoom:class {},mountMontage:opts=>{introOptions=opts;return {close(){}};},performance,MAPS,getMap,drawBackdrop,drawTerrain,drawWater,Game,FIGHTERS,PLATFORMS,ARMORS,victoryTrophy,RewardInventory,FLOWER_KEY,flowerIcon,starIcon,ITEM_NAMES,document,window:{localStorage:storage,events:{},addEventListener(t,fn){this.events[t]=fn;}},matchMedia:()=>({matches:false}),devicePixelRatio:1,innerWidth:1200,innerHeight:740,requestAnimationFrame(){},crypto:{randomUUID},console,assert};
+const sandbox={mountPhoneShell,standaloneMode,playViewportHeight,CombatAudio,instructionsHTML,Math:appMath,canSeeFighter,drawBlindness,bindTouchControls,computeView,screenToWorld,unpackGame,packGame,NetworkRoom:class {},mountMontage:opts=>{introOptions=opts;return {close(){}};},performance,MAPS,getMap,drawBackdrop,drawTerrain,drawWater,Game,FIGHTERS,PLATFORMS,ARMORS,victoryTrophy,RewardInventory,FLOWER_KEY,flowerIcon,starIcon,ITEM_NAMES,document,window:{localStorage:storage,events:{},addEventListener(t,fn){this.events[t]=fn;}},matchMedia:()=>({matches:false}),devicePixelRatio:1,innerWidth:1200,innerHeight:740,requestAnimationFrame(){},crypto:{randomUUID},console,assert};
 const source=fs.readFileSync('dist/game.js','utf8').replace(/^import .*;\n/gm,'');
 const run=vm.createContext(sandbox);vm.runInContext(source,run);
 vm.runInContext(`
