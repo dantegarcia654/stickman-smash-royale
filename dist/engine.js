@@ -10,7 +10,7 @@ export const FIGHTERS=[
 {name:'PIXIE',role:'The glitter menace',color:'#ff8fdb',power:'Glitter gallop',desc:'Touch rivals to recruit a glitter-farting unicorn army. Aim at an enemy + Q to command. Z sprints.',cool:5,speed:325},
 {name:'ROTT',role:'The zombie dog',color:'#48db72',power:'Rotten pounce',desc:'Touch rivals to turn them into zombie dogs in your pack. X bites. Z pounces. Aim + Q commands.',cool:5,speed:335},
 {name:'KAIDOG',role:'The atomic hound',color:'#287a53',power:'Atomic breath',desc:'Stronger atomic hound: X fires 36-damage mouth balls. Z blasts a 72-damage beam (5s cooldown).',cool:5,speed:305},
-{name:'SHADE',role:'The lights-out trickster',color:'#3c4354',power:'Blinding aura',desc:'Z surrounds Shade with a 6s aura. Nearby rivals are nearly blinded for 10s when they enter. Shade keeps his sight.',cool:5,speed:315},
+{name:'SHADE',role:'The lights-out trickster',color:'#3c4354',power:'Blinding aura',desc:'Z surrounds Shade with a 6s aura. Nearby rivals are nearly blinded for 5s when they enter. Shade keeps his sight.',cool:5,speed:315},
 {name:'IVORY',role:'The bare-knuckle fighter',color:'#f4f5ff',power:'Rising uppercut',desc:'No gun. X punches; Z hits a powerful uppercut. Immune to every attack from Blaze.',cool:5,speed:320}];
 export const ARMORS=[{name:'WOOD',color:'#ad7748',points:25},{name:'IRON',color:'#c4cfda',points:55},{name:'DIAMOND',color:'#62e6ef',points:80},{name:'GOLD',color:'#ffd45c',points:40},{name:'NETHERITE',color:'#635569',points:100},{name:'WOOL',color:'#f8e7ef',points:15},{name:'EMERALD',color:'#47e698',points:85},{name:'RUBY',color:'#f45878',points:90}];
 export const PLATFORMS=CLASSIC_PLATFORMS;
@@ -68,7 +68,7 @@ export class Game {
  const pull=950*dt;e.vx-=dx/d*pull;e.vy-=dy/d*pull;e.stun=Math.max(e.stun,.08);this.effect(e.x,e.y-30,'#86a9ff',1);
  }
  }
- applyBlindAuras(){for(const shade of this.fighters){if(!this.active(shade)||!(shade.blindAura>0)){shade.blindContacts=new Set();continue;}const contacts=new Set();for(const rival of this.fighters){if(rival===shade||!this.active(rival)||this.allied(shade,rival)||rival.shield>0||rival.starTime>0||Math.hypot(rival.x-shade.x,rival.y-shade.y)>250)continue;contacts.add(rival.id);if(!shade.blindContacts?.has(rival.id)){rival.blindTime=10;this.effect(rival.x,rival.y-30,'#747c98',12);}}shade.blindContacts=contacts;}}
+ applyBlindAuras(){for(const shade of this.fighters){if(!this.active(shade)||!(shade.blindAura>0)){shade.blindContacts=new Set();continue;}const contacts=new Set();for(const rival of this.fighters){if(rival===shade||!this.active(rival)||this.allied(shade,rival)||rival.shield>0||rival.starTime>0||Math.hypot(rival.x-shade.x,rival.y-shade.y)>250)continue;contacts.add(rival.id);if(!shade.blindContacts?.has(rival.id)){rival.blindTime=5;this.effect(rival.x,rival.y-30,'#747c98',12);}}shade.blindContacts=contacts;}}
  special(f){if(f.cool>0||!this.active(f)||(f.type===5&&f.scared>0)||f.unicorn>0||f.zombie>0)return false;const farthest=f.type===4?this.fighters.filter(e=>e!==f&&this.active(e)&&!this.allied(e,f)).sort((a,b)=>Math.hypot(b.x-f.x,b.y-f.y)-Math.hypot(a.x-f.x,a.y-f.y))[0]:null;if(f.type===4&&!farthest)return false;f.cool=FIGHTERS[f.type].cool;this.effect(f.x,f.y-25,FIGHTERS[f.type].color,30);
  if(f.type===0){f.dash=.25;f.dashHits=new Set();f.vx=f.face*1100;f.vy=-70;f.shield=.3;}
  if(f.type===1){for(let i=-3;i<=3;i++){let a=f.aim+i*.14;this.bullets.push({x:f.x,y:f.y-30,vx:Math.cos(a)*620,vy:Math.sin(a)*620,life:1.3,owner:f.id,power:2,color:'#ff8055'});}}

@@ -66,7 +66,7 @@ The camera follows your fighter on small portrait screens. A small arena overvie
 | Kobalt | Inhale and copy a rival's form, weapon, and power for 14 seconds |
 | Pixie | Touch rivals to recruit glitter-farting unicorn allies |
 | Rott | Green dog that turns touched rivals into zombie dog allies |
-| Shade | Six-second proximity aura; entering rivals get ten seconds of near-black vision while Shade keeps his sight |
+| Shade | Six-second proximity aura; entering rivals get five seconds of near-black vision while Shade keeps his sight |
 | Ivory | Punches and uppercuts, no gun; immune to Blaze attacks |
 | Kaidog | Dark-green atomic dog: 36-damage mouth balls and 72-damage breath beam; five-second power cooldown |
 
@@ -100,9 +100,9 @@ This is programmatic coverage. Fresh visual browser QA was blocked by agent-owne
 
 ## Shade proximity blindness
 
-Z activates a six-second aura with a 250-unit radius. Rivals entering it get ten seconds of nearly black vision, with only a faint small area around themselves visible. Remaining inside does not repeatedly restart the timer; leaving and re-entering can apply a fresh ten seconds. Shade and allies are unaffected by their own aura. Shields and Super Star protection block a new application. Blindness fades out at the end and clears on knockout/respawn. Blinded bots can sense only nearby rivals; touch auto-aim and the minimap also respect that limited sight. The server stores blindness per fighter, so a multiplayer victim's view changes without darkening the caster's screen.
+Z activates a six-second aura with a 250-unit radius. Rivals entering it get five seconds of nearly black vision, with only a faint small area around themselves visible. Remaining inside does not repeatedly restart the timer; leaving and re-entering can apply a fresh five seconds. Shade and allies are unaffected by their own aura. Shields and Super Star protection block a new application. Blindness fades out at the end and clears on knockout/respawn. Blinded bots can sense only nearby rivals; touch auto-aim and the minimap also respect that limited sight. The server stores blindness per fighter, so a multiplayer victim's view changes without darkening the caster's screen.
 
-All twelve Z super moves recharge in five seconds. Power durations, including Shade's aura and the ten-second blindness effect, are separate from recharge time.
+All twelve Z super moves recharge in five seconds. Power durations, including Shade's aura and the five-second blindness effect, are separate from recharge time.
 
 ## Combat audio and complete instructions
 
