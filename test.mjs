@@ -65,11 +65,11 @@ check(()=>{const g=new Game(4,()=>.99),rival=g.fighters[1];rival.type=5;rival.ba
 function renderPodium(podium){return victoryTrophy(FIGHTERS[podium.winnerType],FIGHTERS[podium.loserType]);}
 check(()=>{const g=new Game(0,()=>.99);g.player.lives=1;g.eliminate(g.player);g.update(.01);assert.equal(g.podium,null);});
 check(()=>{const g=new Game(7,()=>.99);for(const f of g.fighters.slice(1)){g.lastRecruited=f.id;f.commander=0;f.unicorn=600;}g.update(.01);assert.equal(g.podium,null);assert(!g.over);assert(g.finalShowdown);});
-// Cats scare Blaze, interrupt fire attacks, and let him recover when he leaves.
-check(()=>{const g=new Game(5,()=>.99),p=g.player;p.x=350;p.y=700;p.dash=.2;p.slash=.2;g.checkCats(p);assert(p.scared>0);assert.equal(p.dash,0);assert.equal(p.slash,0);assert(!g.shoot(p,0));assert(!g.special(p));assert.equal(p.hp,100);});
-check(()=>{const g=new Game(5,()=>.99),p=g.player;p.x=350;p.y=700;g.checkCats(p);p.x=700;p.y=215;p.shield=10;for(let i=0;i<100;i++)g.update(1/60);assert.equal(p.scared,0);assert(g.shoot(p,0));assert(g.special(p));});
-check(()=>{const g=new Game(0,()=>.99),p=g.player;p.x=350;p.y=700;g.checkCats(p);assert.equal(p.scared,0);assert(g.shoot(p,0));});
-check(()=>{const g=new Game(6,()=>.99),p=g.player;p.type=5;p.x=350;p.y=700;g.checkCats(p);assert(p.scared>0);assert(!g.shoot(p,0));p.type=6;g.checkCats(p);assert.equal(p.scared,0);});
+// Cats are decorative: Blaze and copied Blaze keep their attacks and movement.
+check(()=>{const g=new Game(5,()=>.99),p=g.player;p.x=350;p.y=700;assert(g.shoot(p,0));assert(g.special(p));g.update(.01,{move:1});assert(p.dash>0);assert(p.slash>0);assert.equal(p.hp,100);});
+check(()=>{const g=new Game(5,()=>.99),p=g.player;p.x=350;p.y=700;assert(g.activateItem(p,'flower'));assert(g.fireball(p,0));assert.equal(p.flowerShots,4);});
+check(()=>{const g=new Game(0,()=>.99),p=g.player;p.x=350;p.y=700;g.update(.01);assert(g.shoot(p,0));});
+check(()=>{const g=new Game(6,()=>.99),p=g.player;p.type=5;p.x=350;p.y=700;g.update(.01,{move:1});assert(g.shoot(p,0));assert(g.special(p));});
 // Armor durability and real small/large hitboxes; mushroom health and expiry.
 check(()=>{const g=new Game(0,()=>.99),p=g.player;p.armorType=1;p.armor=55;g.hit(p,30,0,0,1);assert.equal(p.hp,100);assert.equal(p.armor,25);g.hit(p,40,0,0,1);assert.equal(p.hp,85);assert.equal(p.armor,0);assert.equal(p.armorType,null);});
 check(()=>{const g=new Game(5,()=>.99),p=g.player,e=g.fighters[1];p.x=600;p.y=700;e.x=660;e.y=700;e.armor=100;e.armorType=4;g.shoot(p,0);assert.equal(e.lives,4);assert(e.respawn>0);});

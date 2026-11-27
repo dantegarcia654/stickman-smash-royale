@@ -62,7 +62,7 @@ The camera follows your fighter on small portrait screens. A small arena overvie
 | Bulwark | Three-second shield |
 | Bloom | Grow climbable vines |
 | Nova | Teleport beside the farthest surviving rival |
-| Blaze | One-hit fire sword and lunge; cats suppress his fire |
+| Blaze | One-hit fire sword and lunge; no special weakness |
 | Kobalt | Inhale and copy a rival's form, weapon, and power for 14 seconds |
 | Pixie | Touch rivals to recruit glitter-farting unicorn allies |
 | Rott | Green dog that turns touched rivals into zombie dog allies |
