@@ -6,7 +6,7 @@ export const CINEMATIC_SCENES=[
  {start:7200,end:11000,kicker:'TAKE THE HIGH GROUND',title:'NOW YOU SEE ME.',detail:'Bloom climbs. Nova blinks. Kobalt steals the move.'},
  {start:11000,end:15000,kicker:'BAD DOG. BIG POWER.',title:'LIGHTS OUT. LASERS ON.',detail:'Shade brings darkness. Kaidog answers with atomic breath.'},
  {start:15000,end:18500,kicker:'THIS GOT WEIRD.',title:'BRING YOUR OWN ARMY.',detail:'Pixie brings unicorns. Rott brings zombie dogs.'},
- {start:18500,end:22000,kicker:'TWELVE FIGHTERS. SEVEN WORLDS.',title:'ONE LAST STICK.',detail:'Your turn. Bring your friends. Start some chaos.'}
+ {start:18500,end:22000,kicker:'WILD FIGHTERS. SEVEN WORLDS.',title:'ONE LAST STICK.',detail:'Your turn. Bring your friends. Start some chaos.'}
 ];
 const COLORS=['#ffe34d','#ff8055','#74b7ff','#a4ed8a','#cda0ff','#ff4055','#4767dc','#ff8fdb','#48db72','#287a53','#3c4354','#f4f5ff'];
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)),ease=v=>{v=clamp(v);return v*v*(3-2*v);},mix=(a,b,t)=>a+(b-a)*clamp(t);

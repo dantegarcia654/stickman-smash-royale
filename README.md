@@ -1,6 +1,6 @@
 # Stickman Smash Royale
 
-A browser platform fighting game built with Codex from Dante's game ideas: twelve fighters, seven maps, five lives each, wild powers, saved winning rewards, solo bots, and online multiplayer rooms.
+A browser platform fighting game built with Codex from Dante's game ideas: thirteen fighters, seven maps, five lives each, wild powers, saved winning rewards, solo bots, and online multiplayer rooms.
 
 ## Play with friends
 
@@ -13,7 +13,7 @@ Open [the public game](https://stickman-smash-royale-dante.dante-garcia-9136.cha
 
 Online matches continue when one player leaves or switches tabs. After a short disconnect timeout, a bot takes over that fighter. Temporary network errors retry while the tab stays open. Refreshing the page loses that room session. Online matches cannot be paused. Rooms expire after 30 minutes without requests.
 
-The 22-second opening cartoon cutscene shows choreographed fights and the full cast's powers: dash/shield collisions, sword blocks and uppercuts, vines and teleportation, inhale/copy, atomic breath and darkness, and unicorn/zombie transformations. It can be skipped with **Space** or **Skip Intro**, and replayed with **Watch Intro**. Reduced-motion preference skips autoplay.
+The 22-second opening cartoon cutscene shows choreographed fights and the original cast's powers: dash/shield collisions, sword blocks and uppercuts, vines and teleportation, inhale/copy, atomic breath and darkness, and unicorn/zombie transformations. It can be skipped with **Space** or **Skip Intro**, and replayed with **Watch Intro**. Reduced-motion preference skips autoplay.
 
 ## Run locally
 
@@ -66,6 +66,7 @@ The camera follows your fighter on small portrait screens. A small arena overvie
 | Kobalt | Inhale and copy a rival's form, weapon, and power for 14 seconds |
 | Pixie | Touch rivals to recruit glitter-farting unicorn allies |
 | Rott | Green dog that turns touched rivals into zombie dog allies |
+| Godzilla | Atomic breath beam (X); 48-damage tail slam launches rivals within 190 units (Z); five-second recharge |
 | Shade | Six-second proximity aura; entering rivals get five seconds of near-black vision while Shade keeps his sight |
 | Ivory | Punches and uppercuts, no gun; immune to Blaze attacks |
 | Kaidog | Dark-green atomic dog: 36-damage mouth balls and 72-damage breath beam; five-second power cooldown |
@@ -102,7 +103,7 @@ This is programmatic coverage. Fresh visual browser QA was blocked by agent-owne
 
 Z activates a six-second aura with a 250-unit radius. Rivals entering it get five seconds of nearly black vision, with only a faint small area around themselves visible. Remaining inside does not repeatedly restart the timer; leaving and re-entering can apply a fresh five seconds. Shade and allies are unaffected by their own aura. Shields and Super Star protection block a new application. Blindness fades out at the end and clears on knockout/respawn. Blinded bots can sense only nearby rivals; touch auto-aim and the minimap also respect that limited sight. The server stores blindness per fighter, so a multiplayer victim's view changes without darkening the caster's screen.
 
-All twelve Z super moves recharge in five seconds. Power durations, including Shade's aura and the five-second blindness effect, are separate from recharge time.
+All thirteen Z super moves recharge in five seconds. Power durations, including Shade's aura and the five-second blindness effect, are separate from recharge time.
 
 ## Combat audio and complete instructions
 
